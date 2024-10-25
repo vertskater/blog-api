@@ -14,17 +14,15 @@ datasource db {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  forename String
-  surname  String
-  email    String    @unique
-  password String
-  role     Role      @default(USER)
-  posts    Post[]    @relation("UserPosts")
-  comments Comment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  role      Role      @default(USER)
+  posts     Post[]    @relation("UserPosts")
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  ApiKey    ApiKey[]
 }
 
 model Post {
@@ -50,6 +48,22 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ApiKey {
+  id         Int          @id @default(autoincrement())
+  key        String       @unique
+  clientName String // Name or description of the client using the API key (e.g., "Mobile App")
+  createdAt  DateTime     @default(now())
+  expiresAt  DateTime? // Optional expiration date
+  status     ApiKeyStatus @default(ACTIVE) // Status of the API key (ACTIVE, REVOKED)
+  ownerId    Int // Foreign key to associate with a user or client
+  owner      User         @relation(fields: [ownerId], references: [id])
+}
+
+enum ApiKeyStatus {
+  ACTIVE
+  REVOKED
 }
 
 enum Role {

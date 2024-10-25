@@ -1,7 +1,11 @@
 const users = require('express').Router();
+const passport = require('passport');
 
-users.get('/', (req, res, next) => {
-  res.status(200).json({msg: 'hello from users route'});
-})
+const usersController = require('../middleware/users');
+users.get('/api-key', passport.authenticate('jwt', {session: false}), usersController.pullApiKeys);
+users.get('/api-key/new', passport.authenticate('jwt', {session: false}), usersController.generateNewKey);
+
+users.post('/register', usersController.registerUser);
+users.post('/login', usersController.login);
 
 module.exports = users;
