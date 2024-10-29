@@ -51,14 +51,16 @@ model Comment {
 }
 
 model ApiKey {
-  id         Int          @id @default(autoincrement())
-  key        String       @unique
-  clientName String // Name or description of the client using the API key (e.g., "Mobile App")
-  createdAt  DateTime     @default(now())
-  expiresAt  DateTime? // Optional expiration date
-  status     ApiKeyStatus @default(ACTIVE) // Status of the API key (ACTIVE, REVOKED)
-  ownerId    Int // Foreign key to associate with a user or client
-  owner      User         @relation(fields: [ownerId], references: [id])
+  id          Int          @id @default(autoincrement())
+  key         String       @unique
+  clientName  String // Name or description of the client using the API key (e.g., "Mobile App")
+  usageCount  Int          @default(0)
+  maxRequests Int          @default(1000)
+  createdAt   DateTime     @default(now())
+  expiresAt   DateTime? // Optional expiration date
+  status      ApiKeyStatus @default(ACTIVE) // Status of the API key (ACTIVE, REVOKED)
+  ownerId     Int // Foreign key to associate with a user or client
+  owner       User         @relation(fields: [ownerId], references: [id])
 }
 
 enum ApiKeyStatus {

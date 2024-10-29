@@ -1,24 +1,42 @@
-const prisma = require('./prismaClient');
+const prisma = require("./prismaClient");
 
-
-const saveNewApiKey =  (hashedKey, data) => {
+const saveNewApiKey = (hashedKey, data) => {
   return prisma.apiKey.create({
     data: {
       key: hashedKey,
       clientName: data.clientName,
-      ownerId: data.owner
+      ownerId: data.owner,
     },
-  })
-}
-const getApiKeys = (userId) => {
-  return prisma.apiKey.findMany({
+  });
+};
+const countApiKeys = (userId) => {
+  return prisma.apiKey.aggregate({
+    _count: {
+      ownerId: userId,
+    },
+  });
+};
+const getApiKey = (key) => {
+  return prisma.apiKey.findUnique({
     where: {
-      ownerId: userId
-    }
-  })
-}
+      key: key,
+    },
+  });
+};
+const updateUsageCount = async (apiKey) => {
+  await prisma.apiKey.update({
+    where: {
+      key: apiKey.key,
+    },
+    data: {
+      usageCount: apiKey.usageCount + 1,
+    },
+  });
+};
 
 module.exports = {
   saveNewApiKey,
-  getApiKeys
-}
+  countApiKeys,
+  getApiKey,
+  updateUsageCount,
+};

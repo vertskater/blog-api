@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "ApiKey" ADD COLUMN     "maxRequests" INTEGER NOT NULL DEFAULT 1000,
+ADD COLUMN     "usageCount" INTEGER NOT NULL DEFAULT 0;
