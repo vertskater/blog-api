@@ -1,13 +1,13 @@
-const member = require("express").Router();
+const blog = require("express").Router();
 const apiKey = require("../middleware/apiKey");
-const memberController = require("../middleware/member");
+const blogController = require("../middleware/blog");
 const passport = require("passport");
 
-member.get(
+blog.get(
   "/posts",
   passport.authenticate("jwt", { session: false }),
   apiKey.apiKeyRateLimit,
-  memberController.listPosts
+  blogController.listPosts
 );
 
-module.exports = member;
+module.exports = blog;

@@ -11,6 +11,10 @@ const validationSchema = [
     .withMessage("Password must be at least 8 characters long")
     .trim(),
 ];
+const validationSchemaUpdate = [
+  body("id").notEmpty().withMessage("please provide a valid user id"),
+  body("email").isEmail().withMessage("Must be a valid email address").trim(),
+];
 
 const generateNewKey = async (req, res, next) => {
   const apiKey = crypto.randomBytes(32).toString("hex");
@@ -98,22 +102,35 @@ const login = async (req, res, next) => {
   }
 };
 
-const pullApiKeys = async (req, res, next) => {
-  try {
-    const keys = await dbApiKey.getApiKeys(req.user.id);
-
-    if (keys) {
-      return res.status(200).json({ success: true, keys: keys });
+const updateUserEmail = [
+  validationSchemaUpdate,
+  async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        msg: "no valid e-mail-address or user Id",
+        errorInfo: errors,
+      });
     }
-    res.status(401).json({ success: false, msg: "no keys found" });
-  } catch (err) {
-    next(err);
-  }
-};
+    try {
+      const userId = parseInt(req.body.id);
+      const email = req.body.email;
+      await dbUser.changeEmail(email, userId);
+      res
+        .status(200)
+        .json({ success: true, msg: "e-mail successfully changed" });
+    } catch (err) {
+      res
+        .status(400)
+        .json({ success: false, msg: "could not change e-mail-address" });
+    }
+  },
+];
 
 module.exports = {
   generateNewKey,
   registerUser,
   login,
-  pullApiKeys,
+  updateUserEmail,
 };
