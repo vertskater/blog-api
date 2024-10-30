@@ -1,9 +1,11 @@
 const posts = require("express").Router();
 const passport = require("passport");
 const apiKey = require("../middleware/apiKey");
-const { isAdmin } = require("../middleware/authorisation");
+const { isAdmin, isUser } = require("../middleware/authorisation");
 
 const postsController = require("../middleware/posts");
+const commentsController = require("../middleware/comments");
+
 //Blog Posts get requests
 posts.get(
   "/posts",
@@ -36,6 +38,13 @@ posts.post(
   isAdmin,
   postsController.newPost
 );
+posts.post(
+  "/post/comment/:postId",
+  passport.authenticate("jwt", { session: false }),
+  apiKey.apiKeyRateLimit,
+  isUser,
+  commentsController.addComment
+);
 // PUT Requests
 posts.put(
   "/post",
@@ -49,12 +58,26 @@ posts.put(
   isAdmin,
   postsController.published
 );
+posts.put(
+  "/post/comment/:commentId",
+  passport.authenticate("jwt", { session: false }),
+  apiKey.apiKeyRateLimit,
+  isUser,
+  commentsController.updateComment
+);
 // Delete Requests
 posts.delete(
   "/post/:id",
   passport.authenticate("jwt", { session: false }),
   isAdmin,
   postsController.deletePost
+);
+posts.delete(
+  "/post/comment/:commentId",
+  passport.authenticate("jwt", { session: false }),
+  apiKey.apiKeyRateLimit,
+  isUser,
+  commentsController.deleteComment
 );
 
 module.exports = posts;
