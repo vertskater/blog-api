@@ -36,7 +36,8 @@ A RESTful API for a blog platform, supporting user registration, authentication,
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/vertskater/blog-api.git
-   cd blog-api```
+   cd blog-api
+   ```
 2. **Install dependencies**
     ```bash
     npm install
