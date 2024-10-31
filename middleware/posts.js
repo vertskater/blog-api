@@ -77,7 +77,13 @@ const getPost = async (req, res, next) => {
   const postId = parseInt(req.params.id);
   try {
     const post = await dbPosts.getPostById(postId);
-    console.log(post);
+    if (!post)
+      return res
+        .status(400)
+        .json({
+          success: false,
+          msg: `there is no post with the id: ${postId}`,
+        });
     res
       .status(200)
       .json({ success: true, msg: "post fetched from db", post: post });

@@ -23,6 +23,13 @@ const getApiKey = (key) => {
     },
   });
 };
+const fetchApiKeys = (userId) => {
+  return prisma.apiKey.findMany({
+    where: {
+      ownerId: userId,
+    },
+  });
+};
 const updateUsageCount = async (apiKey) => {
   await prisma.apiKey.update({
     where: {
@@ -34,9 +41,29 @@ const updateUsageCount = async (apiKey) => {
   });
 };
 
+const fetchAllKeysGroupByOwner = () => {
+  return prisma.apiKey.groupBy({
+    by: ["ownerId", "key", "usageCount", "maxRequests"],
+  });
+};
+
+const updateStatus = async (status, id) => {
+  await prisma.apiKey.update({
+    where: {
+      id: id,
+    },
+    data: {
+      status: status,
+    },
+  });
+};
+
 module.exports = {
   saveNewApiKey,
   countApiKeys,
   getApiKey,
+  fetchAllKeysGroupByOwner,
+  fetchApiKeys,
   updateUsageCount,
+  updateStatus,
 };

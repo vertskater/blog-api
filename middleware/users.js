@@ -18,7 +18,8 @@ const validationSchemaUpdate = [
 
 const generateNewKey = async (req, res, next) => {
   const apiKey = crypto.randomBytes(32).toString("hex");
-  const hashedKey = crypto.createHash("sha256").update(apiKey).digest("hex");
+  const { iv, encryptedData } = utils.encryptApiKey(apiKey);
+  // const hashedKey = crypto.createHash("sha256").update(apiKey).digest("hex");
   const clientName = req.body.clientName || "default Api Key";
   try {
     const keys = await dbApiKey.countApiKeys(req.user.id);
@@ -33,13 +34,31 @@ const generateNewKey = async (req, res, next) => {
       clientName: clientName,
       owner: req.user.id,
     };
-    await dbApiKey.saveNewApiKey(hashedKey, data);
+    await dbApiKey.saveNewApiKey(`${encryptedData}.${iv}`, data);
     res.status(200).json({
       key: apiKey,
       msg: "successfully generated - Attention: save the key somewhere secure. There is no way to replace this key when lost!!!",
     });
   } catch (err) {
     next(err);
+  }
+};
+const getApiKeys = async (req, res, next) => {
+  const userId = parseInt(req.user.id);
+  try {
+    const keyRecords = await dbApiKey.fetchApiKeys(userId);
+    keyRecords.forEach((apiKey) => {
+      const keyData = apiKey.key.split(".");
+      apiKey.key = utils.decryptApiKey(keyData[0], keyData[1]);
+    });
+    res
+      .status(200)
+      .json({ success: true, msg: "api keys fetched", keys: keyRecords });
+  } catch (err) {
+    res.status(401).json({
+      success: false,
+      msg: "cant find any Api-Keys, please generate a new one",
+    });
   }
 };
 
@@ -133,4 +152,5 @@ module.exports = {
   registerUser,
   login,
   updateUserEmail,
+  getApiKeys,
 };
