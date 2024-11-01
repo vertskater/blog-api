@@ -110,7 +110,7 @@ const login = async (req, res, next) => {
       const jwt = utils.issueJwt(user);
       return res.status(200).json({
         success: true,
-        msg: "jwt token issued",
+        msg: "jwt token issued, you are logged in",
         token: jwt.token,
         expiresIn: jwt.expires,
       });

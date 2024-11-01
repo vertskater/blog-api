@@ -21,6 +21,7 @@ users.put(
 );
 
 users.post("/register", usersController.registerUser);
+
 users.post("/login", usersController.login);
 
 module.exports = users;
