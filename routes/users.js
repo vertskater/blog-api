@@ -14,6 +14,7 @@ users.get(
   passport.authenticate("jwt", { session: false }),
   usersController.generateNewKey
 );
+
 users.put(
   "/update",
   passport.authenticate("jwt", { session: false }),
