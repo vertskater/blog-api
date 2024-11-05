@@ -17,4 +17,18 @@ app.use(cors());
 
 app.use(require("./routes"));
 
+//catch all 404-handler
+app.use((req, res, next) => {
+  res.status(404).json({
+    error: "Not Found",
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+  });
+});
+//catch unknown errors
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({
+    error: err.message || "Internal Server Error",
+  });
+});
 app.listen(PORT);
