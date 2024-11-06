@@ -34,9 +34,13 @@ const generateNewKey = async (req, res, next) => {
       clientName: clientName,
       owner: req.user.id,
     };
-    await dbApiKey.saveNewApiKey(`${encryptedData}.${iv}`, data);
+    const apiKeyData = await dbApiKey.saveNewApiKey(
+      `${encryptedData}.${iv}`,
+      data
+    );
     res.status(200).json({
       key: apiKey,
+      metaData: apiKeyData,
       msg: "successfully generated - Attention: save the key somewhere secure. There is no way to replace this key when lost!!!",
     });
   } catch (err) {
