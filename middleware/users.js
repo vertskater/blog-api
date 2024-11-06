@@ -39,9 +39,10 @@ const generateNewKey = async (req, res, next) => {
       data
     );
     res.status(200).json({
+      success: true,
+      msg: "successfully generated - Attention: save the key somewhere secure. There is no way to replace this key when lost!!!",
       key: apiKey,
       metaData: apiKeyData,
-      msg: "successfully generated - Attention: save the key somewhere secure. There is no way to replace this key when lost!!!",
     });
   } catch (err) {
     next(err);
