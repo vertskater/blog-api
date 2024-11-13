@@ -1,8 +1,9 @@
 const users = require("express").Router();
 const passport = require("passport");
-const { isUser } = require("../middleware/authorisation");
+const { isUser, isAdmin } = require("../middleware/authorisation");
 
 const usersController = require("../middleware/users");
+const apiKeyController = require("../middleware/apiKey");
 users.get(
   "/api-keys",
   passport.authenticate("jwt", { session: false }),
@@ -19,6 +20,12 @@ users.put(
   "/update",
   passport.authenticate("jwt", { session: false }),
   usersController.updateUserEmail
+);
+users.put(
+  "/api-key-status",
+  passport.authenticate("jwt", { session: false }),
+  isUser,
+  apiKeyController.changeStatus
 );
 
 users.post("/register", usersController.registerUser);

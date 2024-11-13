@@ -1,6 +1,6 @@
 const apiKeyRouter = require("express").Router();
 const passport = require("passport");
-const { isAdmin } = require("../middleware/authorisation");
+const { isAdmin, isUser } = require("../middleware/authorisation");
 
 const apiKeyController = require("../middleware/apiKey");
 apiKeyRouter.get(

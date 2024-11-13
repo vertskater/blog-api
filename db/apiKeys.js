@@ -11,9 +11,10 @@ const saveNewApiKey = (hashedKey, data) => {
 };
 const countApiKeys = (userId) => {
   return prisma.apiKey.aggregate({
-    _count: {
+    where: {
       ownerId: userId,
     },
+    _count: true,
   });
 };
 const getApiKey = (key) => {
@@ -52,9 +53,7 @@ const updateStatus = async (status, id) => {
     where: {
       id: id,
     },
-    data: {
-      status: status,
-    },
+    data: {},
   });
 };
 
@@ -65,5 +64,4 @@ module.exports = {
   fetchAllKeysGroupByOwner,
   fetchApiKeys,
   updateUsageCount,
-  updateStatus,
 };
