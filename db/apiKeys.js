@@ -53,7 +53,9 @@ const updateStatus = async (status, id) => {
     where: {
       id: id,
     },
-    data: {},
+    data: {
+      status: status,
+    },
   });
 };
 
@@ -64,4 +66,5 @@ module.exports = {
   fetchAllKeysGroupByOwner,
   fetchApiKeys,
   updateUsageCount,
+  updateStatus,
 };
