@@ -29,8 +29,7 @@ const newPost = [
         content: req.body.message,
         authorId: user.id,
       };
-      console.log(post);
-      await dbAdmin.pushNewPost(post);
+      await dbPosts.pushNewPost(post);
       res.status(200).json({ success: true, msg: "post successfully saved" });
     } catch (err) {
       res
@@ -78,12 +77,10 @@ const getPost = async (req, res, next) => {
   try {
     const post = await dbPosts.getPostById(postId);
     if (!post)
-      return res
-        .status(400)
-        .json({
-          success: false,
-          msg: `there is no post with the id: ${postId}`,
-        });
+      return res.status(400).json({
+        success: false,
+        msg: `there is no post with the id: ${postId}`,
+      });
     res
       .status(200)
       .json({ success: true, msg: "post fetched from db", post: post });
