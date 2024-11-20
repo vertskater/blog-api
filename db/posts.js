@@ -13,8 +13,12 @@ const pushNewPost = async (post) => {
 const getPosts = async (limit = 10) => {
   return prisma.post.findMany({
     take: limit,
+    include: {
+      author: true,
+    },
   });
 };
+
 const getPostsWithComments = async (limit = 10) => {
   return prisma.post.findMany({
     take: limit,
@@ -23,6 +27,7 @@ const getPostsWithComments = async (limit = 10) => {
     },
   });
 };
+
 const getPostWithComments = async (postId) => {
   return prisma.post.findUnique({
     where: {
@@ -41,6 +46,7 @@ const getPostById = async (postId) => {
     },
   });
 };
+
 const updatePost = async (post) => {
   return prisma.post.update({
     where: {
