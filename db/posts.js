@@ -16,11 +16,6 @@ const getPosts = async (limit = 10) => {
     include: {
       author: true,
     },
-    orderBy: [
-      {
-        createdAt: 'desc',
-      } 
-    ]
   });
 };
 
@@ -30,6 +25,11 @@ const getPostsWithComments = async (limit = 10) => {
     include: {
       comments: true,
     },
+     orderBy: [
+      {
+        createdAt: 'desc',
+      } 
+    ]
   });
 };
 
