@@ -25,11 +25,10 @@ const getPostsWithComments = async (limit = 10) => {
     include: {
       comments: true,
     },
-     orderBy: [
+     orderBy: 
       {
         createdAt: 'desc',
-      } 
-    ]
+      },
   });
 };
 
