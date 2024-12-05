@@ -16,6 +16,11 @@ const getPosts = async (limit = 10) => {
     include: {
       author: true,
     },
+    orderBy: [
+      {
+        createdAt: 'desc',
+      } 
+    ]
   });
 };
 
